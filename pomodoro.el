@@ -163,6 +163,8 @@
       (pomodoro-stop)
     ('error nil)))                      ;expected
 
-(setq-default mode-line-format (cons mode-line-format '(pomodoro-mode-line-string)))
+(add-to-list
+ 'mode-line-format
+ '(pomodoro-mode-line-string pomodoro-mode-line-string))
 
 (provide 'pomodoro)
