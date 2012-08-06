@@ -73,7 +73,7 @@
 
 (defvar pomodoro-timer nil)
 (defvar pomodoro-pomodoros 0)
-(defvar pomodor-mode-line-string "")
+(defvar pomodoro-mode-line-string "")
 (defvar pomodoro-current-cycle nil)
 (defvar pomodoro-cycle-end-time nil
   "Time, as returned by current-time, when the current pomodoro
