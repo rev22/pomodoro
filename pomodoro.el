@@ -130,11 +130,14 @@
   (setq pomodoro-mode-line-string (pomodoro-compute-mode-line-string))
   (force-mode-line-update))
 
-(defun pomodoro-start ()
-  (interactive)
+;;;###autoload
+(defun pomodoro-start (&optional message)
+  (interactive "sFind your focus: ")
   (when pomodoro-timer
     (error "The Pomodoro timer is already runnnig"))
-  (pomodoro--log "[START POMODORO]")
+  (pomodoro--log
+   (concat "Pomodoro START"
+	   (if message (concat ": " message) ".")))
   (pomodoro-begin-cycle pomodoro-work-cycle)
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
