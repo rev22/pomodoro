@@ -141,6 +141,8 @@
    (concat "Pomodoro START"
 	   (if message (concat ": " message) ".")))
   (pomodoro-begin-cycle pomodoro-work-cycle)
+  (save-window-excursion
+    (shell-command "play -q -n -c1 synth 1 sin 4 gain 80 band 400 30 gain 8 trim 0.5 0.75 repeat 1500 &" "*pomodoros-ticking*"))
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
 ;;;###autoload
@@ -154,6 +156,8 @@
   (when (not pomodoro-timer)
     (error "The Pomodoro timer is not currently active"))
   (pomodoro--log "Pomodoro STOP.")
+  (let ((p (get-buffer-process "*pomodoros*")))
+    (and p (kill-process p)))
   (cancel-timer pomodoro-timer)
   (setq pomodoro-mode-line-string ""
         pomodoro-timer nil
