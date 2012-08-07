@@ -81,15 +81,17 @@
 (defvar pomodoro-cycle-start-time nil
   "Time, as returned by current-time, when the current cycle started.")
 
+(defvar pomodoro-nolog nil)
 (defun pomodoro--log (&rest args)
-  (save-current-buffer
-    (with-current-buffer (get-buffer-create pomodoro-log-buffer)
-      (setq buffer-read-only t)
-      (let ((inhibit-read-only t))
-        (goto-char (point-max))
-        (insert (format-time-string "%D %H:%M" (current-time)) " - ")
-        (apply 'insert args)
-        (insert "\n")))))
+  (unless pomodoro-nolog
+    (save-current-buffer
+      (with-current-buffer (get-buffer-create pomodoro-log-buffer)
+	(setq buffer-read-only t)
+	(let ((inhibit-read-only t))
+	  (goto-char (point-max))
+	  (insert (format-time-string "%D %H:%M" (current-time)) " - ")
+	  (apply 'insert args)
+	  (insert "\n"))))))
 
 (defun pomodoro-get-next-cycle (current-cycle)
   "Computes, based on current cycle, the next cycle, and returns it."
@@ -141,11 +143,17 @@
   (pomodoro-begin-cycle pomodoro-work-cycle)
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
+;;;###autoload
+(defalias 'pomodoro (symbol-function 'pomodoro-start))
+
+(defun pomodoros ()
+  (switch-to-buffer "*pomodoros*"))
+
 (defun pomodoro-stop ()
   (interactive)
   (when (not pomodoro-timer)
     (error "The Pomodoro timer is not currently active"))
-  (pomodoro--log "[STOP POMODORO]")
+  (pomodoro--log "Pomodoro STOP.")
   (cancel-timer pomodoro-timer)
   (setq pomodoro-mode-line-string ""
         pomodoro-timer nil
@@ -154,13 +162,14 @@
 
 (defun pomodoro-restart ()
   (interactive)
-  (pomodoro--log "[RESTART POMODORO]")
-  (pomodoro-stop)
-  (pomodoro-start))
+  (pomodoro--log "Pomodoro RESTART.")
+  (let ((pomodoro-nolog t))
+    (pomodoro-stop)
+    (pomodoro-start)))
 
 (defun pomodoro-reset ()
   (interactive)
-  (pomodoro--log "[RESET POMODODO]")
+  (pomodoro--log "Pomodoro RESET.")
   (setq pomodoro-pomodoros 0)
   (condition-case ex
       (pomodoro-stop)
