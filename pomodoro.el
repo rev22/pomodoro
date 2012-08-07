@@ -141,7 +141,7 @@
    (concat "Pomodoro START"
 	   (if message (concat ": " message) ".")))
   (pomodoro-begin-cycle pomodoro-work-cycle)
-  (start-process "*pomodoros-ticking*" "*pomodoros-ticking*" "/bin/sh" "-c" "play -q -n -c1 synth 1 sin 4 gain 80 band 400 30 gain 8 trim 0.5 0.75 repeat 1500")
+  (start-process "*pomodoros-ticking*" "*pomodoros-ticking*" "/bin/sh" "-c" "play -q -n -c1 synth 1 sin 4 gain 80 band 453 10 gain 10 trim 0.5 0.75 repeat 1500")
   (setq pomodoro-timer (run-with-timer 0 1 'pomodoro-tick)))
 
 ;;;###autoload
